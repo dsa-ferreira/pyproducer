@@ -5,7 +5,7 @@ Python CLI for generating and producing kafka events
 # How to use
 
 Create a python package (default is `models.py` but target can be changed) with your classes that represent the Events and extend EventBase.
-In this class, define the __init__ method as shown calling super as shown below. The argument should be a class that extends Datatype and defines your payload.
+In this class, create a class, decorate it with the `@event` decorator and add a `payload` field to it with a value object of that extends the Datatype class.
 ```
 class Example(ObjectDatatype):
     def __init__(self):
@@ -19,14 +19,12 @@ class Example(ObjectDatatype):
         self.field10 = NullDatatype()
         self.field11 = DatetimeDatatype()
 
+@event
 class ExampleEvent(EventBase):
-
-    def __init__(self):
-        super().__init__(Example())
-
+    payload = Example()
 ```
 
-The topic destination can be set on the event by adding a second argument to the `super().__init__()` called topic or by passing the ´-t´ flag on the CLI.
+The topic destination can be set on the event by adding a second field to the class called topic or by passing the ´-t´ flag on the CLI.
 
 ## Available Datatypes
 
