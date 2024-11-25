@@ -6,6 +6,7 @@ class KafkaProducer:
         conf = {
             'bootstrap.servers': kafka_server,
             'default.topic.config': {'api.version.request': False},
+            'log_level': 0
         }
 
         self.producer = Producer(conf)
