@@ -4,6 +4,10 @@ Python CLI for generating and producing kafka events
 
 # How to use
 
+Call the pyproducer.py with the python interpreter.
+
+## To define the events
+
 Create a python package (default is `models.py` but target can be changed) with your classes that represent the Events and extend EventBase.
 In this class, create a class, decorate it with the `@event` decorator and add a `payload` field to it with a value object of that extends the Datatype class.
 ```
