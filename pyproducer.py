@@ -8,9 +8,8 @@ from src.utils.reflection import find_event_models
 
 def _options():
     parser = argparse.ArgumentParser(
-                    prog='ProgramName',
-                    description='What the program does',
-                    epilog='Text at the bottom of help')
+                    prog='PyProducer',
+                    description='Python CLI for generating and producing kafka events')
     parser.add_argument("-e", "--event-count",
                          type=int,
                          default=1,
