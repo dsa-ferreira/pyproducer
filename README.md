@@ -28,7 +28,7 @@ class ExampleEvent(EventBase):
 
 ## Available Datatypes
 
-#### NumericDatatype
+### NumericDatatype
 
 Generates a random number.
 Args:
@@ -36,17 +36,17 @@ Args:
 - max (default 1000000000)
 - step (default 1)
 
-#### StringDatatype
+### StringDatatype
 
 Generates a random string.
 Args:
 - regex (default [A-Za-z]{5}[0-9]{3})
 
-#### UUIDDatatype
+### UUIDDatatype
 
 Generates a random UUID v4
 
-#### DatetimeDatatype
+### DatetimeDatatype
 
 Generates a random Datetime inside a range
 Args:
@@ -54,22 +54,22 @@ Args:
 - end (default 2114/12/31 00:00:00)
 - format (default %Y-%m-%d %H:%M:%S)
 
-#### ObjectDatatype
+### ObjectDatatype
 
 Builder for custom objects.
 Individual fields defined as object atributes.
 
-#### ConstDatatype
+### ConstDatatype
 
 Always returns the same value
 Args:
 - value
 
-#### NullDatatype
+### NullDatatype
 
 Always returns null
 
-#### CustomDatatype
+### CustomDatatype
 
 Accepts a callable as argument to always run on payload generation
 
