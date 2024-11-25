@@ -37,18 +37,16 @@ def _options():
 
     return parser.parse_args()
 
-def _calculate_batch_count(options):
-    return options.delta / options.batch_sleep if options.delta else 1
+def _calculate_batch_count(delta, batch_sleep):
+    return delta / batch_sleep if delta is not None and delta != 0 else 1
 
-def _main():
-    options = _options()
+def pyproducer(event_count = 1, batch_sleep = 1, delta = 0, broker = "localhost:9092", topic = "", input = "models"):
+    events = find_event_models(input)
 
-    events = find_event_models(options.input)
+    producer = Producer(broker, topic)
 
-    producer = Producer(options.broker, options.topic)
-
-    batch_count = _calculate_batch_count(options)
-    events_per_batch = options.event_count / batch_count
+    batch_count = _calculate_batch_count(delta, batch_sleep)
+    events_per_batch = event_count / batch_count
 
     for _ in range(int(batch_count)):
         for i in range(int(events_per_batch)):
@@ -56,8 +54,13 @@ def _main():
             payload = json.dumps(event.apply())
             producer.send(payload, event.topic)
 
-        sleep(options.batch_sleep)
+        sleep(batch_sleep)
 
+
+
+def _main():
+    options = _options()
+    pyproducer(**vars(options))
 
 if __name__ == '__main__':
     try:

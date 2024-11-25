@@ -14,10 +14,10 @@ class KafkaProducer:
         self.wait = wait
 
     def send(self, message: str, topic: str = ""):
-        if topic == "" and self.topic is None:
+        if topic == "" and self.topic == "":
             raise Exception("No topic defined")
         self.producer.produce(
-            self.topic if topic == "" else topic, 
+            self.topic if topic == "" else topic,
             key="1",
             value=message.encode('UTF-8'))
         self.producer.flush()
