@@ -26,6 +26,8 @@ class ExampleEvent(EventBase):
 
 ```
 
+The topic destination can be set on the event by adding a second argument to the `super().__init__()` called topic or by passing the ´-t´ flag on the CLI.
+
 ## Available Datatypes
 
 ### NumericDatatype

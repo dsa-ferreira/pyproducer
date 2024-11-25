@@ -52,9 +52,9 @@ def _main():
 
     for _ in range(int(batch_count)):
         for i in range(int(events_per_batch)):
-            event = events[i%len(events)]
-            payload = json.dumps(event().apply())
-            producer.send(payload)
+            event = events[i%len(events)]()
+            payload = json.dumps(event.apply())
+            producer.send(payload, event.topic)
 
         sleep(options.batch_sleep)
 
