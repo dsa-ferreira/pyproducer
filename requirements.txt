@@ -1,0 +1,2 @@
+confluent-kafka==2.6.1
+rstr==3.2.2
