@@ -17,6 +17,7 @@ class KafkaProducer:
         if topic == "" and self.topic is None:
             raise Exception("No topic defined")
         self.producer.produce(
-            self.topic if topic is "" else topic, 
+            self.topic if topic == "" else topic, 
             key="1",
             value=message.encode('UTF-8'))
+        self.producer.flush()
