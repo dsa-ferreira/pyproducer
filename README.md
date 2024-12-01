@@ -48,7 +48,11 @@ Args:
 
 ### UUIDDatatype
 
-Generates a random UUID v4
+Generates a random UUID
+
+Note: 
+Only version 1 and 4 are supported. Other versions should be implemented with CustomDatatype.
+When python adds native support for v7, it will be added.
 
 ### DatetimeDatatype
 

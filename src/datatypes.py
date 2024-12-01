@@ -5,6 +5,11 @@ import rstr
 import random
 import uuid
 
+class UnsupportedUUIDVersion(Exception):
+
+    def __init__(self ):
+        super().__init__(f'unsupported uuid version')
+
 class NotDatatypeError(Exception):
 
     def __init__(self, field_name):
@@ -27,9 +32,17 @@ class ConstDatatype(Datatype):
 
 class UUIDDatatype(Datatype):
 
-    def apply(self) -> str:
-        return str(uuid.uuid4())
+    def __init__(self, version: int = 4):
+        self.version = version
 
+    def apply(self) -> str:
+        match self.version:
+            case 1:
+                return str(uuid.uuid1())
+            case 4:
+                return str(uuid.uuid4())
+            case _:
+                raise UnsupportedUUIDVersion()
 class StringDatatype(Datatype):
 
     def __init__(self, regex: str = r"[A-Za-z]{5}[0-9]{3}"):
