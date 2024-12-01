@@ -85,3 +85,38 @@ Accepts a callable as argument to always run on payload generation
 
 You can access and extend the Datatype class.
 All you need to do is implement a method called apply that takes no arguments except self.
+
+## Sequencing Events
+To sequence events, add a field called `dependencies` to the dependent class. This field is an array of strings with the name of the classes representing the dependency event.
+Afterwards, in the dependent object, you can use one of the sequencing datatypes to reference the previous event. 
+
+Example:
+
+```
+class Example(ObjectDatatype):
+    def __init__(self):
+        self.field = NumericDatatype()
+        self.field2 = UUIDDatatype()
+        self.field3 = ConstDatatype("HELLO!")
+
+class Example2(ObjectDatatype):
+    def __init__(self):
+        self.field = NumericDatatype()
+        self.field2 = PrevDatatype("field2")
+        self.field3 = ConstDatatype("HELLO2!")
+
+@event
+class ExampleEvent:
+    payload = Example()
+    topic = "some_topic100"
+
+@event
+class ExampleEvent2:
+    payload = Example2()
+    topic = "some_topic100"
+    dependencies = ['ExampleEvent']
+```
+Currently, only the `PrevDatatype` is supported which simple reuses the field value of a previous event of the depedency. But more will be added soon!
+
+#### Note
+Whenvever a dependency event is used by a dependent, it is removed from the previous events list, so it will only be used once.
