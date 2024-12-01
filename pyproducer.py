@@ -32,7 +32,7 @@ def _options():
     parser.add_argument("-i", "--input",
                          dest="input",
                          default="models",
-                         help="kafka topic for producing the events")
+                         help="file with the payload schemas")
 
 
     return parser.parse_args()
