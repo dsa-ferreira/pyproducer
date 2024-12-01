@@ -4,7 +4,7 @@ Python CLI for generating and producing kafka events
 
 # How to use
 
-Call the pyproducer.py with the python interpreter.
+Call the pyproducer.py with the python interpreter. (`-h` for a list of available arguments ;) )
 
 ## To define the events
 
