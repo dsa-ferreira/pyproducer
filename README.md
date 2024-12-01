@@ -24,7 +24,7 @@ class Example(ObjectDatatype):
         self.field11 = DatetimeDatatype()
 
 @event
-class ExampleEvent(EventBase):
+class ExampleEvent:
     payload = Example()
 ```
 
