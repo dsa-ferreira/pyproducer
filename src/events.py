@@ -8,8 +8,8 @@ class EventValidationException(Exception):
 
 def event(cls):
 
-    def apply(self):
-        return self.payload.apply()
+    def apply(self, event_service):
+        return self.payload.apply(event_service)
 
     if not getattr(cls, "payload", False):
         raise EventValidationException("No payload defined")
@@ -17,7 +17,9 @@ def event(cls):
         raise EventValidationException("Payload is not a Datatype")
     if not getattr(cls, "topic", False):
         cls.topic = ""
-
+    if not getattr(cls, "dependencies", False):
+        cls.dependencies = []
     cls.apply = apply
     cls.is_event = True
     return cls
+

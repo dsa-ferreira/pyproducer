@@ -5,6 +5,8 @@ import rstr
 import random
 import uuid
 
+from src.event_service import EventService
+
 class UnsupportedUUIDVersion(Exception):
 
     def __init__(self ):
@@ -18,15 +20,24 @@ class NotDatatypeError(Exception):
 
 class Datatype:
 
-    def apply(self) -> Any:
+    def apply(self, event_service: EventService) -> Any:
         raise Exception
+
+class PrevDatatype(Datatype):
+
+    def __init__(self, field_name: Any):
+        self.field_name = field_name
+
+    def apply(self, event_service: EventService) -> Any:
+        return event_service.get_attribute_from_curr(self.field_name)
+
 
 class ConstDatatype(Datatype):
 
     def __init__(self, value: Any):
         self.value = value
 
-    def apply(self) -> Any:
+    def apply(self, event_service: EventService) -> Any:
         return self.value
 
 
@@ -35,7 +46,7 @@ class UUIDDatatype(Datatype):
     def __init__(self, version: int = 4):
         self.version = version
 
-    def apply(self) -> str:
+    def apply(self, event_service: EventService) -> str:
         match self.version:
             case 1:
                 return str(uuid.uuid1())
@@ -48,7 +59,7 @@ class StringDatatype(Datatype):
     def __init__(self, regex: str = r"[A-Za-z]{5}[0-9]{3}"):
         self.regex = re.compile(regex)
 
-    def apply(self) -> str:
+    def apply(self, event_service: EventService) -> str:
         return rstr.xeger(self.regex)
 
 
@@ -59,18 +70,18 @@ class NumericDatatype(Datatype):
         self.max = max
         self.step = step
 
-    def apply(self) -> int:
+    def apply(self, event_service: EventService) -> int:
         return random.randrange(self.min, self.max, self.step)
 
 
 class ObjectDatatype(Datatype):
 
-    def apply(self) -> Dict:
+    def apply(self, event_service: EventService) -> Dict:
         final_object = {}
         for key, value  in vars(self).items():
             if not isinstance(value, Datatype):
                 raise NotDatatypeError(key)
-            final_object[key] = value.apply()
+            final_object[key] = value.apply(event_service)
 
         return final_object
 
@@ -79,7 +90,7 @@ class CustomDatatype(Datatype):
     def __init__(self, callable: Callable):
         self.callable = callable
 
-    def apply(self) -> Any:
+    def apply(self, event_service: EventService) -> Any:
         return self.callable()
 
 class DatetimeDatatype(Datatype):
@@ -92,7 +103,7 @@ class DatetimeDatatype(Datatype):
         self.end = end
         self.format = format
 
-    def apply(self) -> str:
+    def apply(self, event_service: EventService) -> str:
         start_timestamp = self.start.timestamp()
         end_timestamp = self.end.timestamp()
 
@@ -102,7 +113,7 @@ class DatetimeDatatype(Datatype):
 
 class NullDatatype(Datatype):
 
-    def apply(self) -> None:
+    def apply(self, event_service: EventService) -> None:
         return None
 
 

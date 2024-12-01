@@ -1,6 +1,7 @@
 import json
 from time import sleep
 import argparse
+from src.event_service import EventService
 from src.utils.printer import print_user_message
 from src.kafka_producer import KafkaProducer as Producer
 from src.utils.reflection import find_event_models
@@ -43,17 +44,20 @@ def _calculate_batch_count(delta, batch_sleep):
 def pyproducer(event_count = 1, batch_sleep = 1, delta = 0, broker = "localhost:9092", topic = "", input = "models"):
     events = find_event_models(input)
 
+    event_service = EventService(events)
     producer = Producer(broker, topic)
 
     batch_count = _calculate_batch_count(delta, batch_sleep)
     events_per_batch = event_count / batch_count
 
-    for _ in range(int(batch_count)):
-        for i in range(int(events_per_batch)):
-            event = events[i%len(events)]()
-            payload = json.dumps(event.apply())
-            producer.send(payload, event.topic)
 
+    for _ in range(int(batch_count)):
+        for _ in range(int(events_per_batch)):
+            event = event_service.get_event_type()()
+            payload = event.apply(event_service)
+            payload_json = json.dumps(payload)
+            producer.send(payload_json, event.topic)
+            event_service.push(event, payload)
         sleep(batch_sleep)
 
 

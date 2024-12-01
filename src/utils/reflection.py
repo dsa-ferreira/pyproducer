@@ -9,3 +9,5 @@ def find_event_models(module_name: str):
             subclasses.append(obj)
     return subclasses
 
+def get_class_name(obj):
+    return type(obj).__name__
