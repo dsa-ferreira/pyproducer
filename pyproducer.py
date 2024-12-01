@@ -54,10 +54,14 @@ def pyproducer(event_count = 1, batch_sleep = 1, delta = 0, broker = "localhost:
     for _ in range(int(batch_count)):
         for _ in range(int(events_per_batch)):
             event = event_service.get_event_type()()
+
             payload = event.apply(event_service)
             payload_json = json.dumps(payload)
             producer.send(payload_json, event.topic)
+
             event_service.push(event, payload)
+            event_service.clear_current()
+
         sleep(batch_sleep)
 
 

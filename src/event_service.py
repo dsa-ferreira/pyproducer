@@ -1,6 +1,11 @@
 import random
 from src.utils.reflection import get_class_name
 
+class EventServiceException(Exception):
+
+    def __init__(self, msg):
+        super().__init__(msg)
+
 class EventService:
 
     def __init__(self, types: list):
@@ -25,9 +30,11 @@ class EventService:
         while not event:
             index = random.randrange(0, len(self.types))
             ready = False
-            if self.types[index].dependencies == []:
-                return self.types[index]
-            for dep in self.types[index].dependencies:
+            evaluated = self.types[index]
+            if not evaluated.dependencies:
+                return evaluated
+
+            for dep in evaluated.dependencies:
                 if self.check_available(dep):
                     ready = True
                     self.pull(dep)
@@ -50,19 +57,19 @@ class EventService:
 
     def pull(self, class_name):
         if not self.check_available(class_name):
-            raise Exception()
+            raise EventServiceException("Something went terribly wrong! (no dependency event available)")
+
         class_list: list = self.previous.get(class_name)
         self.current = class_list.pop()
 
     def get_attribute_from_curr(self, attribute_name):
-        print(attribute_name)
-        print(self.current)
         if self.current is None:
-            raise Exception()
+            raise EventServiceException("Something went terribly wrong! (no event pulled for use as dependency)")
 
         attribute = self.current.get(attribute_name)
         if attribute is None:
-            raise Exception()
+            raise EventServiceException(f"No attribute value available for {attribute_name}! Are you dependencies properly configured?")
+
         return attribute
 
     def clear_current(self):
