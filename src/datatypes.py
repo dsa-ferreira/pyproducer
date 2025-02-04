@@ -4,6 +4,7 @@ import re
 import rstr
 import random
 import uuid
+from typing import List
 
 from src.event_service import EventService
 
@@ -40,6 +41,15 @@ class ConstDatatype(Datatype):
     def apply(self, event_service: EventService) -> Any:
         return self.value
 
+class RandomConstDatatype(Datatype):
+
+    def __init__(self, value: List[Any]):
+        if not value:
+            raise ValueError("The value list cannot be empty.")
+        self.value = value
+
+    def apply(self, event_service: EventService) -> Any:
+        return random.choice(self.value)
 
 class UUIDDatatype(Datatype):
 
