@@ -50,7 +50,6 @@ def pyproducer(event_count = 1, batch_sleep = 1, delta = 0, broker = "localhost:
     batch_count = _calculate_batch_count(delta, batch_sleep)
     events_per_batch = event_count / batch_count
 
-
     for _ in range(int(batch_count)):
         for _ in range(int(events_per_batch)):
             event = event_service.get_event_type()()

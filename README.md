@@ -116,7 +116,13 @@ class ExampleEvent2:
     topic = "some_topic100"
     dependencies = ['ExampleEvent']
 ```
-Currently, only the `PrevDatatype` is supported which simple reuses the field value of a previous event of the depedency. But more will be added soon!
+### PrevDatatype
+
+Reuses the field value of a previous event of the depedency.
+
+### IncreasingNumericDatatype & DecreasingNumericDatatype
+
+Increase or decrease a numeric field value of a previous event.
 
 #### Note
 Whenvever a dependency event is used by a dependent, it is removed from the previous events list, so it will only be used once.

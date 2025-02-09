@@ -31,6 +31,31 @@ class PrevDatatype(Datatype):
     def apply(self, event_service: EventService) -> Any:
         return event_service.get_attribute_from_curr(self.field_name)
 
+class IncreasingNumbericDatatype(Datatype):
+
+    def __init__(self, field_name: Any, max = 1000000000, step: int = 1):
+        self.field_name = field_name
+        self.max = max
+        self.step = step
+
+    def apply(self, event_service: EventService) -> Any:
+        prev_value = event_service.get_attribute_from_curr(self.field_name)
+        if isinstance(prev_value, int) and not isinstance(prev_value, bool):
+            return random.randrange(prev_value, self.max, self.step)
+        raise Exception("Referenced field was not numeric")
+
+class DecreasingNumbericDatatype(Datatype):
+
+    def __init__(self, field_name: Any, min = 0, step: int = 1):
+        self.field_name = field_name
+        self.min = min
+        self.step = step
+
+    def apply(self, event_service: EventService) -> Any:
+        prev_value = event_service.get_attribute_from_curr(self.field_name)
+        if isinstance(prev_value, int) and not isinstance(prev_value, bool):
+            return random.randrange(self.min, prev_value, self.step)
+        raise Exception("Referenced field was not numeric")
 
 class ConstDatatype(Datatype):
 
